@@ -47,6 +47,20 @@ const getMoreSongs = async (url) => {
     showData(data)
 }
 
+// get lyrics for song
+const getLyrics = async (artist, songtitle) => {
+    const res = await fetch(`${apiURL}/v1/${artist}/${songtitle}`)
+    const data = await res.json()
+
+    const lyrics = data.lyrics.replace(/(\r\n|\r|\n)/g, '<br>')
+
+    result.innerHTML = `<h2> <strong>${artist}</strong> - ${songtitle}</h2>
+        <span>${lyrics}</span>`
+
+    more.innerHTML = ''
+}
+
+
 //event listeners
 form.addEventListener('submit', e => {
     e.preventDefault()
@@ -57,5 +71,15 @@ form.addEventListener('submit', e => {
     } else {
         searchSongs(searchTerm)
     }
+})
 
+//get lyrics button 
+result.addEventListener('click', e => {
+    const clickedEl = e.target
+    if (clickedEl.tagName === 'BUTTON') {
+        const artist = clickedEl.getAttribute('data-artist')
+        const songtitle = clickedEl.getAttribute('data-songtitle')
+
+        getLyrics(artist, songtitle)
+    }
 })
